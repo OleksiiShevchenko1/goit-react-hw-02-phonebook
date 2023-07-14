@@ -13,26 +13,43 @@ export class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    filterContacts: [],
   };
+
+  // addContact = data => {
+  //   // const { name } = newContact;
+  //   const newContact = { id: nanoid(), ...data };
+  //   // this.state.contacts.find(contact => contact.name === name);
+  //   // // alert(`${name} is already in contacts`);
+
+  //   this.setState(prevState => {
+  //     return { contacts: [...prevState.contacts, newContact] };
+  //   });
+  // };
 
   addContact = data => {
-    const newContact = { id: nanoid(), ...data };
-    this.setState(prevState => {
-      return { contacts: [...prevState.contacts, newContact] };
-    });
+    const checkContact = this.state.contacts.find(
+      contact => contact.name === data.name
+    );
+
+    if (checkContact) {
+      alert(`${data.name} is already in contacts.`);
+    } else {
+      const newContact = { id: nanoid(), ...data };
+      this.setState(prevState => {
+        return {
+          contacts: [...prevState.contacts, newContact],
+        };
+      });
+    }
   };
 
-  filterContacts = ev => {
-    this.setState({
-      filterContacts: this.state.contacts.filter(contact =>
-        contact.name.toLowerCase().includes(ev.target.value.toLowerCase())
-      ),
-    });
-  };
+  visibleContact = () =>
+    this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
 
   updateFilter = ev => {
-    this.setState({ filter: ev.target.value });
+    this.setState({ filter: ev.currentTarget.value });
   };
 
   deleteContact = id => {
@@ -47,13 +64,9 @@ export class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        <Filter onChange={this.filterContacts} />
+        <Filter value={this.state.filter} onChange={this.updateFilter} />
         <ContactList
-          contacts={
-            this.state.filterContacts.length
-              ? this.state.filterContacts
-              : this.state.contacts
-          }
+          contacts={this.visibleContact()}
           onDeleteContact={this.deleteContact}
         />
       </div>

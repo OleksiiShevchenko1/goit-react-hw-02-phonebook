@@ -1,10 +1,10 @@
 import React from 'react';
 
-export const Filter = () => {
+export const Filter = ({ value, onChange }) => {
   return (
-    <p>
-      Find contacts by name
-      <input type="text" />
-    </p>
+    <label>
+      Find contacts by name:
+      <input type="text" value={value} onChange={onChange} />
+    </label>
   );
 };
